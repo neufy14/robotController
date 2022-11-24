@@ -420,6 +420,16 @@ float getPotPos(int jointNum) {
   int sampleAnalogInSum = 0;
   float averageAnalogIn = 0;
   int numSamples = 10;
+
+  int smallGear = {26, 10, 0, 0, 0, 0};
+  int largeGear = {86, 60, 0, 0, 0, 0};
+  double gearRatio = largeGear[jointNum] / smallGear[jointNum];
+  double onePotTurn = {102.3, 102.3, 102.3, 0, 0, 0};102.3;
+  float PotVPerDegree = onePotTurn[jointNum] / 360;
+  float motorVPerDegree = gearRatio * VPerDegree;
+  float motorPosInV = 0;
+  float motorPosDeg = 0;
+  
   for (int i=0; i<numSamples; i++) {
     sampleAnalogInSum = sampleAnalogInSum + analogRead(pinNum[jointNum]);
     delay(10);
@@ -429,6 +439,14 @@ float getPotPos(int jointNum) {
   currentPos[jointNum] = averageAnalogIn;
   Serial.print("current pot pos in function = ");
   Serial.println(currentPos[jointNum]);
+
+  motorPosDeg = ((potMotorZero[jointNum] - currentPos[jointNum]) / motorVPerDegree;
+  
+  currentDegree[i] = ((potMotorZero[i] - currentPos[i]) * motorDegreeInPot);
+  if (currentDegree[i] != motor_positions[i]) {
+    StepperMove(stepper_steps[i], stepper_direction[i], "?", 10, currentDegree[i], motor_positions[i], i);
+  }
+  
   return currentPos[jointNum];
 }
 
